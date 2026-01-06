@@ -1,0 +1,173 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Premium Ophthalmology Design System - Dr. Gilson Menezes */
+
+@layer base {
+  :root {
+    /* Premium Green-Gold Ophthalmology Palette */
+    --background: 45 25% 98%;
+    --foreground: 150 15% 12%;
+
+    --card: 45 20% 99%;
+    --card-foreground: 150 15% 12%;
+
+    --popover: 45 20% 99%;
+    --popover-foreground: 150 15% 12%;
+
+    /* Deep forest green - precision & trust */
+    --primary: 155 35% 28%;
+    --primary-foreground: 45 30% 97%;
+
+    --secondary: 48 20% 94%;
+    --secondary-foreground: 150 15% 18%;
+
+    --muted: 50 15% 92%;
+    --muted-foreground: 150 10% 40%;
+
+    /* Rich gold accent - elegance */
+    --accent: 42 75% 48%;
+    --accent-foreground: 150 20% 10%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 48 18% 86%;
+    --input: 48 18% 86%;
+    --ring: 155 35% 28%;
+
+    --radius: 0.25rem;
+
+    /* Custom premium tokens */
+    --gold: 42 80% 50%;
+    --gold-muted: 45 35% 70%;
+    --stone-dark: 150 20% 12%;
+    --stone-medium: 150 10% 38%;
+    --hero-overlay: 155 25% 8%;
+
+    --sidebar-background: 48 18% 97%;
+    --sidebar-foreground: 150 15% 22%;
+    --sidebar-primary: 155 35% 28%;
+    --sidebar-primary-foreground: 45 30% 97%;
+    --sidebar-accent: 48 18% 92%;
+    --sidebar-accent-foreground: 150 15% 18%;
+    --sidebar-border: 48 18% 86%;
+    --sidebar-ring: 155 35% 28%;
+  }
+
+  .dark {
+    --background: 155 20% 6%;
+    --foreground: 45 20% 95%;
+
+    --card: 155 18% 9%;
+    --card-foreground: 45 20% 95%;
+
+    --popover: 155 18% 9%;
+    --popover-foreground: 45 20% 95%;
+
+    --primary: 42 75% 55%;
+    --primary-foreground: 155 20% 8%;
+
+    --secondary: 155 15% 16%;
+    --secondary-foreground: 45 18% 90%;
+
+    --muted: 155 12% 16%;
+    --muted-foreground: 48 12% 58%;
+
+    --accent: 155 40% 40%;
+    --accent-foreground: 45 25% 95%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 155 12% 18%;
+    --input: 155 12% 18%;
+    --ring: 42 75% 55%;
+
+    --gold: 42 85% 58%;
+    --gold-muted: 45 28% 38%;
+    --stone-dark: 155 20% 6%;
+    --stone-medium: 48 12% 52%;
+    --hero-overlay: 155 25% 4%;
+
+    --sidebar-background: 155 18% 8%;
+    --sidebar-foreground: 45 18% 90%;
+    --sidebar-primary: 42 75% 55%;
+    --sidebar-primary-foreground: 155 20% 8%;
+    --sidebar-accent: 155 12% 14%;
+    --sidebar-accent-foreground: 45 18% 90%;
+    --sidebar-border: 155 12% 16%;
+    --sidebar-ring: 42 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+@layer components {
+  .hero-gradient {
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--hero-overlay) / 0.7),
+      hsl(var(--hero-overlay) / 0.85)
+    );
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(135deg, hsl(var(--gold)), hsl(var(--accent)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .section-divider {
+    @apply w-16 h-0.5 bg-primary mx-auto;
+  }
+
+  .card-premium {
+    @apply bg-card border border-border shadow-lg hover:shadow-xl transition-shadow duration-300;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
