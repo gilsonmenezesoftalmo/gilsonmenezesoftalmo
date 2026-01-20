@@ -25,7 +25,7 @@ const Hero = () => {
           A ciência da visão em sua forma mais precisa.
         </h1>
         
-        <p className="text-lg md:text-xl text-primary-foreground/80 font-light max-w-2xl mx-auto mb-10 italic animate-slide-up" style={{ animationDelay: '0.2s' }}>
+        <p className="text-lg md:text-xl text-primary-foreground font-light max-w-2xl mx-auto mb-10 italic animate-slide-up" style={{ animationDelay: '0.2s' }}>
           Especialista em Glaucoma e Catarata. Unindo tecnologia de ponta à medicina humanizada.
         </p>
 

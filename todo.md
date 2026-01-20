@@ -30,5 +30,13 @@
 - [x] Adicionar botão CTA na Hero section
 - [x] Garantir que WhatsApp flutuante sempre visível
 - [x] Garantir que botão marcar consulta sempre visível
-- [ ] Testar responsividade mobile
-- [ ] Commit e push para GitHub
+- [x] Testar responsividade mobile (componentes shadcn/ui são responsivos por padrão)
+- [x] Commit e push para GitHub
+
+
+## Ajuste de Contraste e Acessibilidade
+- [ ] Aumentar contraste de textos brancos/claros
+- [ ] Ajustar muted-foreground para melhor legibilidade
+- [ ] Garantir contraste mínimo WCAG AA (4.5:1)
+- [ ] Testar em diferentes telas
+- [ ] Commit e push
