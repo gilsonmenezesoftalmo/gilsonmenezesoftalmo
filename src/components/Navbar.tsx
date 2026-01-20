@@ -19,6 +19,7 @@ const Navbar = () => {
     { href: '#especialidades', label: 'Especialidades' },
     { href: '#tecnologia', label: 'Tecnologia' },
     { href: '#jornada', label: 'A Consulta' },
+    { href: '/pre-consulta', label: 'Pré-Consulta', isRoute: true },
     { href: '#blog', label: 'Dúvidas' },
   ];
 
@@ -38,13 +39,23 @@ const Navbar = () => {
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-8">
           {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-sm uppercase tracking-widest font-medium text-muted-foreground hover:text-primary transition-colors"
-            >
-              {link.label}
-            </a>
+            link.isRoute ? (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-sm uppercase tracking-widest font-medium text-primary hover:text-primary/80 transition-colors font-semibold"
+              >
+                {link.label}
+              </a>
+            ) : (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-sm uppercase tracking-widest font-medium text-muted-foreground hover:text-primary transition-colors"
+              >
+                {link.label}
+              </a>
+            )
           ))}
           <Button asChild variant="default" size="default" className="uppercase tracking-wider font-semibold">
             <a href={CONTACT.whatsapp.link} target="_blank" rel="noopener noreferrer">
@@ -72,7 +83,11 @@ const Navbar = () => {
               <a
                 key={link.href}
                 href={link.href}
-                className="block text-sm uppercase tracking-widest font-medium text-muted-foreground hover:text-primary transition-colors"
+                className={`block text-sm uppercase tracking-widest font-medium transition-colors ${
+                  link.isRoute
+                    ? 'text-primary font-semibold'
+                    : 'text-muted-foreground hover:text-primary'
+                }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {link.label}

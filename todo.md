@@ -5,9 +5,11 @@
 - [x] Implementar Tema C (Clássica Confortável) como tema claro
 - [x] Remover completamente cores da Opção A (verde-dourado atual)
 - [x] Atualizar index.css com nova paleta
-- [ ] Testar todos os componentes com novos temas
+- [x] Testar todos os componentes com novos temas
 - [ ] Integrar formulário de pré-consulta (se necessário)
-- [ ] Criar build final
+- [x] Criar build final
+- [x] Publicar no GitHub
+- [x] Deploy automático no Netlify
 
 ## Paleta Tema B - Clínica Moderna (Dark)
 - Background: Azul escuro profundo (#0a2540)
@@ -20,3 +22,13 @@
 - Texto: Preto/cinza escuro (#1a1a1a)
 - Primary: Azul royal (#2563eb)
 - Accent: Azul médio (#3b82f6)
+
+
+## Integração Formulário Pré-Consulta
+- [x] Criar página /pre-consulta
+- [x] Adicionar link no menu de navegação (Navbar)
+- [x] Adicionar botão CTA na Hero section
+- [x] Garantir que WhatsApp flutuante sempre visível
+- [x] Garantir que botão marcar consulta sempre visível
+- [ ] Testar responsividade mobile
+- [ ] Commit e push para GitHub

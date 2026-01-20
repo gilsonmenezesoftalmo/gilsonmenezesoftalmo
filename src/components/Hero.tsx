@@ -36,6 +36,11 @@ const Hero = () => {
               Agendar Avaliação
             </a>
           </Button>
+          <Button asChild variant="default" size="xl" className="uppercase tracking-wider font-semibold">
+            <a href="/pre-consulta">
+              Pré-Consulta Online
+            </a>
+          </Button>
           <Button asChild variant="hero" size="xl" className="uppercase tracking-wider font-semibold">
             <a href="#especialidades">
               Conhecer Tratamentos
