@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -11,7 +11,6 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppFloat from '@/components/WhatsAppFloat';
 import { toast } from 'sonner';
-import { salvarPreConsulta } from '@/lib/preConsultaService';
 
 type FormData = {
   // Etapa 1: Identificação
@@ -27,7 +26,7 @@ type FormData = {
   motivoVisita: 'rotina' | 'glaucoma' | 'catarata' | 'plastica' | '';
   
   // Etapa 3: Dados Clínicos
-  queixasOuSintomas: string;
+  dadosClinicos: Record<string, any>;
   
   // Etapa 4: Histórico de Saúde
   historicoSaude: {
@@ -35,6 +34,7 @@ type FormData = {
     hipertensao: boolean;
     alergias: string;
     medicamentos: string;
+    cirurgiasAnteriores: string;
   };
 };
 
@@ -51,12 +51,13 @@ export default function PreConsulta() {
     dataNascimento: '',
     jaEhPaciente: '',
     motivoVisita: '',
-    queixasOuSintomas: '',
+    dadosClinicos: {},
     historicoSaude: {
       diabetes: false,
       hipertensao: false,
       alergias: '',
       medicamentos: '',
+      cirurgiasAnteriores: '',
     },
   });
 
@@ -75,28 +76,11 @@ export default function PreConsulta() {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     
-    try {
-      // Salvar no Firebase
-      const preConsultaData = {
-        nomeCompleto: formData.nomePaciente,
-        enderecoCompleto: formData.endereco,
-        cpf: formData.cpf,
-        whatsapp: formData.whatsapp,
-        email: formData.email,
-        dataNascimento: formData.dataNascimento,
-        jaEhPaciente: formData.jaEhPaciente === 'sim',
-        motivoVisita: formData.motivoVisita,
-        queixasOuSintomas: formData.queixasOuSintomas,
-        temDiabetes: formData.historicoSaude.diabetes,
-        temHipertensao: formData.historicoSaude.hipertensao,
-        alergias: formData.historicoSaude.alergias,
-        medicamentosEmUso: formData.historicoSaude.medicamentos,
-      };
-
-      await salvarPreConsulta(preConsultaData);
-
-      // Criar mensagem WhatsApp
-      const mensagem = `
+    // Simular envio (aqui você integraria com backend real)
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Criar mensagem WhatsApp
+    const mensagem = `
 *Pré-Consulta Oftalmológica*
 
 *Dados Pessoais:*
@@ -110,32 +94,22 @@ Endereço: ${formData.endereco}
 *Motivo da Visita:* ${formData.motivoVisita}
 *Já é paciente:* ${formData.jaEhPaciente === 'sim' ? 'Sim' : 'Não'}
 
-*Queixas/Sintomas:*
-${formData.queixasOuSintomas || 'Nenhum'}
-
 *Histórico de Saúde:*
 Diabetes: ${formData.historicoSaude.diabetes ? 'Sim' : 'Não'}
 Hipertensão: ${formData.historicoSaude.hipertensao ? 'Sim' : 'Não'}
 Alergias: ${formData.historicoSaude.alergias || 'Nenhuma'}
 Medicamentos: ${formData.historicoSaude.medicamentos || 'Nenhum'}
+    `.trim();
 
-✅ Dados salvos no sistema
-      `.trim();
-
-      const whatsappUrl = `https://wa.me/5531995324400?text=${encodeURIComponent(mensagem)}`;
-      
-      toast.success('Pré-consulta salva e enviada com sucesso!');
-      
-      setTimeout(() => {
-        window.open(whatsappUrl, '_blank');
-        navigate('/');
-      }, 1500);
-    } catch (error) {
-      console.error('Erro ao salvar pré-consulta:', error);
-      toast.error('Erro ao salvar pré-consulta. Tente novamente.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    const whatsappUrl = `https://wa.me/5531995324400?text=${encodeURIComponent(mensagem)}`;
+    
+    setIsSubmitting(false);
+    toast.success('Pré-consulta preparada! Você será redirecionado para o WhatsApp.');
+    
+    setTimeout(() => {
+      window.open(whatsappUrl, '_blank');
+      navigate('/');
+    }, 1500);
   };
 
   const canProceed = () => {
@@ -383,55 +357,80 @@ function Step2({
       <div>
         <h2 className="text-2xl font-semibold mb-2">Motivo da Visita</h2>
         <p className="text-muted-foreground">
-          Qual é o principal motivo de sua consulta?
+          Selecione o principal motivo da sua consulta
         </p>
       </div>
 
       <RadioGroup
         value={formData.motivoVisita}
         onValueChange={(value) =>
-          updateFormData({ motivoVisita: value as any })
+          updateFormData({
+            motivoVisita: value as 'rotina' | 'glaucoma' | 'catarata' | 'plastica',
+          })
         }
+        className="space-y-3"
       >
-        <div className="space-y-4">
-          <div className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-muted cursor-pointer">
-            <RadioGroupItem value="rotina" id="rotina" />
-            <Label htmlFor="rotina" className="cursor-pointer flex-1">
-              <div className="font-semibold">Consulta de Rotina</div>
-              <div className="text-sm text-muted-foreground">Acompanhamento regular</div>
-            </Label>
-          </div>
+        <Card className="cursor-pointer hover:border-primary transition-colors">
+          <CardHeader className="p-4">
+            <div className="flex items-center space-x-3">
+              <RadioGroupItem value="rotina" id="rotina" />
+              <div>
+                <CardTitle className="text-lg">Consulta de Rotina</CardTitle>
+                <CardDescription>
+                  Exame preventivo ou check-up oftalmológico
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+        </Card>
 
-          <div className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-muted cursor-pointer">
-            <RadioGroupItem value="glaucoma" id="glaucoma" />
-            <Label htmlFor="glaucoma" className="cursor-pointer flex-1">
-              <div className="font-semibold">Suspeita de Glaucoma</div>
-              <div className="text-sm text-muted-foreground">Avaliação de pressão ocular</div>
-            </Label>
-          </div>
+        <Card className="cursor-pointer hover:border-primary transition-colors">
+          <CardHeader className="p-4">
+            <div className="flex items-center space-x-3">
+              <RadioGroupItem value="glaucoma" id="glaucoma" />
+              <div>
+                <CardTitle className="text-lg">Glaucoma</CardTitle>
+                <CardDescription>
+                  Avaliação ou acompanhamento de glaucoma
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+        </Card>
 
-          <div className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-muted cursor-pointer">
-            <RadioGroupItem value="catarata" id="catarata" />
-            <Label htmlFor="catarata" className="cursor-pointer flex-1">
-              <div className="font-semibold">Catarata</div>
-              <div className="text-sm text-muted-foreground">Avaliação ou cirurgia</div>
-            </Label>
-          </div>
+        <Card className="cursor-pointer hover:border-primary transition-colors">
+          <CardHeader className="p-4">
+            <div className="flex items-center space-x-3">
+              <RadioGroupItem value="catarata" id="catarata" />
+              <div>
+                <CardTitle className="text-lg">Catarata</CardTitle>
+                <CardDescription>
+                  Avaliação ou cirurgia de catarata
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+        </Card>
 
-          <div className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-muted cursor-pointer">
-            <RadioGroupItem value="plastica" id="plastica" />
-            <Label htmlFor="plastica" className="cursor-pointer flex-1">
-              <div className="font-semibold">Plástica Ocular</div>
-              <div className="text-sm text-muted-foreground">Cirurgia ou avaliação</div>
-            </Label>
-          </div>
-        </div>
+        <Card className="cursor-pointer hover:border-primary transition-colors">
+          <CardHeader className="p-4">
+            <div className="flex items-center space-x-3">
+              <RadioGroupItem value="plastica" id="plastica" />
+              <div>
+                <CardTitle className="text-lg">Plástica Ocular</CardTitle>
+                <CardDescription>
+                  Procedimentos estéticos ou reparadores das pálpebras
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+        </Card>
       </RadioGroup>
     </div>
   );
 }
 
-// Step 3: Informações Clínicas
+// Step 3: Dados Clínicos (simplificado)
 function Step3({
   formData,
   updateFormData,
@@ -439,24 +438,35 @@ function Step3({
   formData: FormData;
   updateFormData: (updates: Partial<FormData>) => void;
 }) {
+  const updateDadosClinicos = (key: string, value: any) => {
+    updateFormData({
+      dadosClinicos: {
+        ...formData.dadosClinicos,
+        [key]: value,
+      },
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-semibold mb-2">Informações Clínicas</h2>
         <p className="text-muted-foreground">
-          Descreva seus sintomas ou queixas atuais
+          Conte-nos mais sobre sua condição (opcional)
         </p>
       </div>
 
-      <div>
-        <Label htmlFor="queixas" className="text-base">Queixas ou Sintomas Atuais</Label>
-        <Textarea
-          id="queixas"
-          value={formData.queixasOuSintomas}
-          onChange={(e) => updateFormData({ queixasOuSintomas: e.target.value })}
-          placeholder="Ex: Visão embaçada, dor nos olhos, dificuldade para enxergar à noite, etc."
-          className="h-32 resize-none"
-        />
+      <div className="space-y-4">
+        <div>
+          <Label htmlFor="queixas" className="text-base">Queixas ou sintomas atuais</Label>
+          <Textarea
+            id="queixas"
+            value={formData.dadosClinicos.queixas || ''}
+            onChange={(e) => updateDadosClinicos('queixas', e.target.value)}
+            placeholder="Descreva seus sintomas ou queixas visuais..."
+            className="min-h-[120px]"
+          />
+        </div>
       </div>
     </div>
   );
@@ -470,54 +480,45 @@ function Step4({
   formData: FormData;
   updateFormData: (updates: Partial<FormData>) => void;
 }) {
+  const updateHistorico = (key: keyof FormData['historicoSaude'], value: any) => {
+    updateFormData({
+      historicoSaude: {
+        ...formData.historicoSaude,
+        [key]: value,
+      },
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-semibold mb-2">Histórico de Saúde</h2>
         <p className="text-muted-foreground">
-          Informações sobre sua saúde geral
+          Informações importantes para seu atendimento
         </p>
       </div>
 
       <div className="space-y-4">
-        <div className="flex items-center space-x-3 p-4 border rounded-lg">
+        <div className="flex items-center space-x-3">
           <input
             type="checkbox"
             id="diabetes"
             checked={formData.historicoSaude.diabetes}
-            onChange={(e) =>
-              updateFormData({
-                historicoSaude: {
-                  ...formData.historicoSaude,
-                  diabetes: e.target.checked,
-                },
-              })
-            }
-            className="w-5 h-5 rounded"
+            onChange={(e) => updateHistorico('diabetes', e.target.checked)}
+            className="w-5 h-5"
           />
-          <Label htmlFor="diabetes" className="cursor-pointer flex-1">
-            Tenho Diabetes
-          </Label>
+          <Label htmlFor="diabetes" className="cursor-pointer">Diabetes</Label>
         </div>
 
-        <div className="flex items-center space-x-3 p-4 border rounded-lg">
+        <div className="flex items-center space-x-3">
           <input
             type="checkbox"
             id="hipertensao"
             checked={formData.historicoSaude.hipertensao}
-            onChange={(e) =>
-              updateFormData({
-                historicoSaude: {
-                  ...formData.historicoSaude,
-                  hipertensao: e.target.checked,
-                },
-              })
-            }
-            className="w-5 h-5 rounded"
+            onChange={(e) => updateHistorico('hipertensao', e.target.checked)}
+            className="w-5 h-5"
           />
-          <Label htmlFor="hipertensao" className="cursor-pointer flex-1">
-            Tenho Hipertensão
-          </Label>
+          <Label htmlFor="hipertensao" className="cursor-pointer">Hipertensão</Label>
         </div>
 
         <div>
@@ -525,34 +526,20 @@ function Step4({
           <Textarea
             id="alergias"
             value={formData.historicoSaude.alergias}
-            onChange={(e) =>
-              updateFormData({
-                historicoSaude: {
-                  ...formData.historicoSaude,
-                  alergias: e.target.value,
-                },
-              })
-            }
-            placeholder="Ex: Penicilina, Dipirona, etc."
-            className="h-20 resize-none"
+            onChange={(e) => updateHistorico('alergias', e.target.value)}
+            placeholder="Liste suas alergias (medicamentos, alimentos, etc.)"
+            className="min-h-[80px]"
           />
         </div>
 
         <div>
-          <Label htmlFor="medicamentos" className="text-base">Medicamentos em Uso</Label>
+          <Label htmlFor="medicamentos" className="text-base">Medicamentos em uso</Label>
           <Textarea
             id="medicamentos"
             value={formData.historicoSaude.medicamentos}
-            onChange={(e) =>
-              updateFormData({
-                historicoSaude: {
-                  ...formData.historicoSaude,
-                  medicamentos: e.target.value,
-                },
-              })
-            }
-            placeholder="Ex: Losartana 50mg, Metformina 500mg, etc."
-            className="h-20 resize-none"
+            onChange={(e) => updateHistorico('medicamentos', e.target.value)}
+            placeholder="Liste os medicamentos que você usa regularmente"
+            className="min-h-[80px]"
           />
         </div>
       </div>
@@ -567,49 +554,34 @@ function Step5({ formData }: { formData: FormData }) {
       <div>
         <h2 className="text-2xl font-semibold mb-2">Revisão dos Dados</h2>
         <p className="text-muted-foreground">
-          Verifique se todas as informações estão corretas
+          Confira as informações antes de enviar
         </p>
       </div>
 
-      <div className="space-y-4 bg-muted p-4 rounded-lg">
-        <div>
-          <h3 className="font-semibold text-sm text-muted-foreground">Dados Pessoais</h3>
-          <div className="mt-2 space-y-1 text-sm">
+      <div className="space-y-4">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Dados Pessoais</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 text-sm">
             <p><strong>Nome:</strong> {formData.nomePaciente}</p>
-            <p><strong>Email:</strong> {formData.email}</p>
             <p><strong>WhatsApp:</strong> {formData.whatsapp}</p>
+            <p><strong>Email:</strong> {formData.email}</p>
             <p><strong>Data de Nascimento:</strong> {formData.dataNascimento}</p>
             {formData.cpf && <p><strong>CPF:</strong> {formData.cpf}</p>}
             <p><strong>Endereço:</strong> {formData.endereco}</p>
-            <p><strong>Paciente anterior:</strong> {formData.jaEhPaciente === 'sim' ? 'Sim' : 'Não'}</p>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        <div>
-          <h3 className="font-semibold text-sm text-muted-foreground">Motivo da Consulta</h3>
-          <p className="mt-2 text-sm">{formData.motivoVisita}</p>
-        </div>
-
-        <div>
-          <h3 className="font-semibold text-sm text-muted-foreground">Queixas</h3>
-          <p className="mt-2 text-sm">{formData.queixasOuSintomas || 'Nenhuma'}</p>
-        </div>
-
-        <div>
-          <h3 className="font-semibold text-sm text-muted-foreground">Histórico de Saúde</h3>
-          <div className="mt-2 space-y-1 text-sm">
-            <p><strong>Diabetes:</strong> {formData.historicoSaude.diabetes ? 'Sim' : 'Não'}</p>
-            <p><strong>Hipertensão:</strong> {formData.historicoSaude.hipertensao ? 'Sim' : 'Não'}</p>
-            <p><strong>Alergias:</strong> {formData.historicoSaude.alergias || 'Nenhuma'}</p>
-            <p><strong>Medicamentos:</strong> {formData.historicoSaude.medicamentos || 'Nenhum'}</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <p className="text-sm text-blue-900">
-          ✅ Ao enviar, seus dados serão salvos no sistema e você será redirecionado para o WhatsApp para confirmar o agendamento.
-        </p>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Informações da Consulta</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 text-sm">
+            <p><strong>Motivo:</strong> {formData.motivoVisita}</p>
+            <p><strong>Já é paciente:</strong> {formData.jaEhPaciente === 'sim' ? 'Sim' : 'Não'}</p>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
